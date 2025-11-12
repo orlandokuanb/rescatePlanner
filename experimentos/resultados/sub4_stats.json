@@ -1,0 +1,13 @@
+{
+  "problema": "sub4_rescate_solo.pddl",
+  "dominio": "dominio_rescate.pddl",
+  "timestamp": "2025-11-12T09:29:16.061517",
+  "numero_acciones": 2,
+  "tiempo_planificacion_seg": 0.008,
+  "planificador": "auto",
+  "plan_encontrado": true,
+  "acciones_por_tipo": {
+    "TRASLADAR_UNIDAD": 1,
+    "ESTABILIZAR_VICTIMA_GRAVE": 1
+  }
+}

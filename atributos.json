@@ -1,0 +1,496 @@
+{
+  "metadata": {
+    "dominio": "Rescate en Mina - Atributos",
+    "curso": "MIA-103",
+    "descripcion": "Atributos y propiedades de los conceptos del dominio",
+    "fecha": "2025-11-12"
+  },
+  "atributos_por_concepto": [
+    {
+      "concepto": "Victima",
+      "atributos": [
+        {
+          "nombre": "estadoSalud",
+          "tipo": "Enumerado",
+          "valores_posibles": ["Grave", "Estable", "NoAfectado", "Estabilizado"],
+          "valor_por_defecto": "Depende del subtipo",
+          "descripcion": "Condición médica actual de la víctima",
+          "mutable": true,
+          "restricciones": [
+            "Grave solo puede cambiar a Estabilizado",
+            "Estable y NoAfectado no cambian de estado",
+            "Solo el médico puede cambiar Grave a Estabilizado"
+          ],
+          "implementacion_pddl": "Tipo + predicado estabilizado"
+        },
+        {
+          "nombre": "necesitaEstabilizacion",
+          "tipo": "Boolean",
+          "valores_posibles": [true, false],
+          "valor_por_defecto": "true para VictimaGrave, false para otras",
+          "descripcion": "Indica si requiere atención médica urgente",
+          "mutable": false,
+          "restricciones": [
+            "Determinado por el tipo de víctima",
+            "No cambia durante la simulación"
+          ],
+          "implementacion_pddl": "Implícito en el tipo victima_grave"
+        },
+        {
+          "nombre": "ubicacionActual",
+          "tipo": "Locacion",
+          "valores_posibles": ["C0", "C1", "C2", "C3", "M"],
+          "valor_por_defecto": "M (todas comienzan en la mina)",
+          "descripcion": "Posición física actual de la víctima",
+          "mutable": true,
+          "restricciones": [
+            "Cambia cuando es transportada en unidad móvil",
+            "Meta: todas deben terminar en C0"
+          ],
+          "implementacion_pddl": "Predicado (en ?victima ?locacion)"
+        },
+        {
+          "nombre": "rescatado",
+          "tipo": "Boolean",
+          "valores_posibles": [true, false],
+          "valor_por_defecto": false,
+          "descripcion": "Marca si la víctima llegó exitosamente a C0",
+          "mutable": true,
+          "restricciones": [
+            "Solo puede cambiar de false a true",
+            "Es condición de meta del problema"
+          ],
+          "implementacion_pddl": "Predicado (rescatado ?victima)"
+        }
+      ]
+    },
+    {
+      "concepto": "UnidadMovil",
+      "atributos": [
+        {
+          "nombre": "capacidadPersonas",
+          "tipo": "Integer",
+          "rango": [0, 15],
+          "valor_por_defecto": "Específico por instancia",
+          "valores_por_instancia": {
+            "UM1": 8,
+            "UM2": 8,
+            "U1": 3,
+            "UP": 15,
+            "UX": 0,
+            "U3": 10
+          },
+          "descripcion": "Número máximo de personas que puede transportar",
+          "mutable": false,
+          "restricciones": [
+            "El conductor no cuenta para la capacidad",
+            "Es una característica fija de cada unidad"
+          ],
+          "implementacion_pddl": "Predicado (puede_transportar_personas ?u ?n)"
+        },
+        {
+          "nombre": "espacioDisponible",
+          "tipo": "Integer",
+          "rango": [0, "capacidadPersonas"],
+          "valor_por_defecto": "Igual a capacidadPersonas",
+          "descripcion": "Número actual de espacios libres",
+          "mutable": true,
+          "restricciones": [
+            "Disminuye al cargar personas",
+            "Aumenta al descargar personas",
+            "No puede ser negativo ni exceder capacidadPersonas"
+          ],
+          "implementacion_pddl": "Predicado (capacidad_disponible ?u ?n)"
+        },
+        {
+          "nombre": "puedeTransportarCarga",
+          "tipo": "Boolean",
+          "valores_posibles": [true, false],
+          "valor_por_defecto": "Específico por instancia",
+          "valores_por_instancia": {
+            "UM1": false,
+            "UM2": false,
+            "U1": true,
+            "UP": true,
+            "UX": true,
+            "U3": false
+          },
+          "descripcion": "Indica si puede transportar recursos pesados",
+          "mutable": false,
+          "restricciones": [
+            "Solo U1, UP y UX pueden cargar recursos",
+            "Es característica fija del diseño del vehículo"
+          ],
+          "implementacion_pddl": "Predicado (puede_transportar_carga ?u)"
+        },
+        {
+          "nombre": "ubicacionActual",
+          "tipo": "Locacion",
+          "valores_posibles": ["C0", "C1", "C2", "C3", "M"],
+          "valor_por_defecto": "C0 (todas comienzan en base)",
+          "descripcion": "Posición física actual del vehículo",
+          "mutable": true,
+          "restricciones": [
+            "Cambia con acciones de traslado",
+            "Debe respetar adyacencia o usar infraestructura"
+          ],
+          "implementacion_pddl": "Predicado (en ?unidad ?locacion)"
+        },
+        {
+          "nombre": "tipoUnidad",
+          "tipo": "Enumerado",
+          "valores_posibles": ["UM", "U1", "UP", "UX", "U3"],
+          "valor_por_defecto": "Específico por instancia",
+          "descripcion": "Clasificación del vehículo según su función",
+          "mutable": false,
+          "restricciones": [
+            "Determina capacidad y tipo de carga",
+            "Es característica inherente"
+          ],
+          "implementacion_pddl": "Tipos en PDDL"
+        }
+      ]
+    },
+    {
+      "concepto": "Infraestructura",
+      "atributos": [
+        {
+          "nombre": "estado",
+          "tipo": "Enumerado",
+          "valores_posibles": ["NoConstruido", "Operativo"],
+          "valor_por_defecto": "NoConstruido",
+          "descripcion": "Estado de construcción actual",
+          "mutable": true,
+          "restricciones": [
+            "Solo puede cambiar de NoConstruido a Operativo",
+            "Requiere acción de construcción con recursos"
+          ],
+          "implementacion_pddl": "Predicados (construido ?i) y (operativo ?i)"
+        },
+        {
+          "nombre": "conectaDesde",
+          "tipo": "Locacion",
+          "valores_posibles": ["C1", "C2", "C3"],
+          "valor_por_defecto": "Específico por instancia",
+          "valores_por_instancia": {
+            "PPF": "C1",
+            "Carretera_C2": "C2",
+            "PCP": "C3"
+          },
+          "descripcion": "Locación de origen que conecta",
+          "mutable": false,
+          "restricciones": [
+            "Característica fija de la infraestructura",
+            "Define dónde debe construirse"
+          ],
+          "implementacion_pddl": "Predicado (conecta ?i ?loc1 ?loc2)"
+        },
+        {
+          "nombre": "conectaHacia",
+          "tipo": "Locacion",
+          "valores_posibles": ["C2", "C3", "M"],
+          "valor_por_defecto": "Específico por instancia",
+          "valores_por_instancia": {
+            "PPF": "C2",
+            "Carretera_C2": "C3",
+            "PCP": "M"
+          },
+          "descripcion": "Locación de destino que conecta",
+          "mutable": false,
+          "restricciones": [
+            "Característica fija de la infraestructura",
+            "Define hacia dónde permite avanzar"
+          ],
+          "implementacion_pddl": "Predicado (conecta ?i ?loc1 ?loc2)"
+        },
+        {
+          "nombre": "requiereMantenimiento",
+          "tipo": "Boolean",
+          "valores_posibles": [true, false],
+          "valor_por_defecto": false,
+          "valores_por_instancia": {
+            "PPF": false,
+            "Carretera_C2": false,
+            "PCP": true
+          },
+          "descripcion": "Indica si necesita operador permanente",
+          "mutable": false,
+          "restricciones": [
+            "Solo PCP requiere mantenimiento",
+            "Si true, requiere operador asignado"
+          ],
+          "implementacion_pddl": "Implícito en reglas del PCP"
+        },
+        {
+          "nombre": "tipoInfraestructura",
+          "tipo": "Enumerado",
+          "valores_posibles": ["Puente", "Carretera", "PuenteColgante"],
+          "valor_por_defecto": "Específico por instancia",
+          "descripcion": "Clasificación según naturaleza constructiva",
+          "mutable": false,
+          "restricciones": [
+            "Determina recursos necesarios",
+            "PPF y PCP son puentes, Carretera_C2 es carretera"
+          ],
+          "implementacion_pddl": "Subtipos en PDDL"
+        }
+      ]
+    },
+    {
+      "concepto": "PersonalRescate",
+      "atributos": [
+        {
+          "nombre": "especialidad",
+          "tipo": "Enumerado",
+          "valores_posibles": ["Medico", "Rescatista", "Asistente"],
+          "valor_por_defecto": "Específico por instancia",
+          "descripcion": "Rol y habilidades del personal",
+          "mutable": false,
+          "restricciones": [
+            "Determina qué acciones puede realizar",
+            "Es característica del personal"
+          ],
+          "implementacion_pddl": "Subtipos: medico, rescatista, asistente"
+        },
+        {
+          "nombre": "capacidadAtencion",
+          "tipo": "Integer",
+          "rango": [0, 10],
+          "valor_por_defecto": "Específico por rol",
+          "valores_por_rol": {
+            "Medico": 4,
+            "Rescatista": 5,
+            "Asistente": 10
+          },
+          "descripcion": "Número máximo de víctimas que puede atender",
+          "mutable": false,
+          "restricciones": [
+            "Médico: 4 pacientes para estabilizar",
+            "Rescatista: 5 víctimas para trasladar",
+            "Asistente: suministros ilimitados (simplificado)"
+          ],
+          "implementacion_pddl": "Contador en predicado"
+        },
+        {
+          "nombre": "ubicacionActual",
+          "tipo": "Locacion",
+          "valores_posibles": ["C0", "C1", "C2", "C3", "M"],
+          "valor_por_defecto": "C0",
+          "descripcion": "Posición física actual",
+          "mutable": true,
+          "restricciones": [
+            "Cambia al trasladarse en unidad móvil",
+            "Meta: debe regresar a C0 al finalizar"
+          ],
+          "implementacion_pddl": "Predicado (en ?persona ?locacion)"
+        },
+        {
+          "nombre": "dentroDeUnidad",
+          "tipo": "UnidadMovil | null",
+          "valores_posibles": ["UM1", "UM2", "U1", "UP", "UX", "U3", null],
+          "valor_por_defecto": null,
+          "descripcion": "Unidad en la que está siendo transportado",
+          "mutable": true,
+          "restricciones": [
+            "null si está fuera de vehículos",
+            "Si tiene valor, se mueve con la unidad"
+          ],
+          "implementacion_pddl": "Predicado (dentro ?persona ?unidad)"
+        }
+      ]
+    },
+    {
+      "concepto": "PersonalConstruccion",
+      "atributos": [
+        {
+          "nombre": "rol",
+          "tipo": "Enumerado",
+          "valores_posibles": ["Tecnico", "Obrero", "Ingeniero", "Operador"],
+          "valor_por_defecto": "Específico por instancia",
+          "descripcion": "Función en las operaciones de construcción",
+          "mutable": false,
+          "restricciones": [
+            "Determina en qué tipo de construcción participa",
+            "Es característica inherente"
+          ],
+          "implementacion_pddl": "Subtipos en PDDL"
+        },
+        {
+          "nombre": "ubicacionActual",
+          "tipo": "Locacion",
+          "valores_posibles": ["C0", "C1", "C2", "C3"],
+          "valor_por_defecto": "C0",
+          "descripcion": "Posición física actual",
+          "mutable": true,
+          "restricciones": [
+            "Cambia al ir a zona de construcción",
+            "DEBE regresar a C0 después de tarea",
+            "Excepto Operador que se queda en C3"
+          ],
+          "implementacion_pddl": "Predicado (en ?persona ?locacion)"
+        },
+        {
+          "nombre": "tareaAsignada",
+          "tipo": "Infraestructura | null",
+          "valores_posibles": ["PPF", "Carretera_C2", "PCP", null],
+          "valor_por_defecto": null,
+          "descripcion": "Infraestructura en la que está trabajando",
+          "mutable": true,
+          "restricciones": [
+            "Solo Operador mantiene asignación permanente",
+            "Otros liberan asignación al completar"
+          ],
+          "implementacion_pddl": "Predicado (asignado_a_tarea ?op ?loc)"
+        }
+      ]
+    },
+    {
+      "concepto": "Locacion",
+      "atributos": [
+        {
+          "nombre": "nombre",
+          "tipo": "String",
+          "valores_posibles": ["C0", "C1", "C2", "C3", "M"],
+          "valor_por_defecto": "N/A",
+          "descripcion": "Identificador único de la locación",
+          "mutable": false,
+          "restricciones": [
+            "Debe ser único en el dominio"
+          ],
+          "implementacion_pddl": "Nombre del objeto"
+        },
+        {
+          "nombre": "tipoEspecial",
+          "tipo": "Enumerado",
+          "valores_posibles": ["Base", "ZonaEstacionamiento", "ZonaDesastre", "Normal"],
+          "valor_por_defecto": "Normal",
+          "valores_por_instancia": {
+            "C0": "Base",
+            "C1": "ZonaEstacionamiento",
+            "C2": "ZonaEstacionamiento",
+            "C3": "ZonaEstacionamiento",
+            "M": "ZonaDesastre"
+          },
+          "descripcion": "Clasificación funcional de la locación",
+          "mutable": false,
+          "restricciones": [
+            "Determina qué acciones son posibles",
+            "Base: origen/destino principal",
+            "ZonaEstacionamiento: permite construcción",
+            "ZonaDesastre: donde están las víctimas"
+          ],
+          "implementacion_pddl": "Predicados (base ?l), (zona_estacionamiento ?l), (zona_desastre ?l)"
+        },
+        {
+          "nombre": "entidadesPresentes",
+          "tipo": "Set[Entidad]",
+          "valores_posibles": "Cualquier conjunto de entidades",
+          "valor_por_defecto": "Específico por estado",
+          "descripcion": "Entidades actualmente en esta locación",
+          "mutable": true,
+          "restricciones": [
+            "Cambia dinámicamente con movimientos",
+            "Calculado a partir de predicados (en ?e ?l)"
+          ],
+          "implementacion_pddl": "Derivado de predicados (en ...)"
+        },
+        {
+          "nombre": "accesible",
+          "tipo": "Boolean",
+          "valores_posibles": [true, false],
+          "valor_por_defecto": "Solo C1 al inicio",
+          "descripcion": "Indica si se puede avanzar a esta locación",
+          "mutable": true,
+          "restricciones": [
+            "C1: siempre true",
+            "C2: true después de construir PPF",
+            "C3: true después de construir Carretera",
+            "M: true después de instalar PCP"
+          ],
+          "implementacion_pddl": "Predicado (puede_avanzar_a ?locacion)"
+        }
+      ]
+    },
+    {
+      "concepto": "Medico",
+      "atributos_especificos": [
+        {
+          "nombre": "pacientesEstabilizados",
+          "tipo": "Integer",
+          "rango": [0, 4],
+          "valor_por_defecto": 0,
+          "descripcion": "Contador de víctimas graves ya estabilizadas",
+          "mutable": true,
+          "restricciones": [
+            "Aumenta cada vez que estabiliza una víctima",
+            "No puede exceder 4 (límite del médico)",
+            "Es precondición para estabilizar"
+          ],
+          "implementacion_pddl": "Predicado (pacientes_estabilizados ?medico ?n)"
+        }
+      ]
+    },
+    {
+      "concepto": "Rescatista",
+      "atributos_especificos": [
+        {
+          "nombre": "victimasTrasladadas",
+          "tipo": "Integer",
+          "rango": [0, 5],
+          "valor_por_defecto": 0,
+          "descripcion": "Contador de víctimas bajo su cuidado",
+          "mutable": true,
+          "restricciones": [
+            "Aumenta al cargar víctimas",
+            "No puede exceder 5 (límite del rescatista)"
+          ],
+          "implementacion_pddl": "Predicado (victimas_trasladadas ?rescatista ?n)"
+        }
+      ]
+    },
+    {
+      "concepto": "Operador",
+      "atributos_especificos": [
+        {
+          "nombre": "puenteAsignado",
+          "tipo": "Locacion",
+          "valores_posibles": ["C3"],
+          "valor_por_defecto": null,
+          "descripcion": "Locación del puente que opera",
+          "mutable": true,
+          "restricciones": [
+            "Se asigna al instalar PCP",
+            "Permanece hasta que todas las víctimas crucen",
+            "Es el último en regresar"
+          ],
+          "implementacion_pddl": "Predicado (asignado_a_tarea ?operador ?locacion)"
+        }
+      ]
+    }
+  ],
+  "atributos_globales": [
+    {
+      "nombre": "tiempoTranscurrido",
+      "tipo": "Integer",
+      "rango": [0, "infinito"],
+      "descripcion": "Pasos de plan ejecutados (opcional en PDDL clásico)",
+      "implementacion_pddl": "No modelado (tiempo discreto implícito)"
+    },
+    {
+      "nombre": "objetivoAlcanzado",
+      "tipo": "Boolean",
+      "descripcion": "Indica si se cumplió la meta del rescate",
+      "implementacion_pddl": "Derivado del estado goal"
+    }
+  ],
+  "resumen_cuantitativo": {
+    "conceptos_con_atributos": 9,
+    "total_atributos_definidos": 47,
+    "atributos_mutables": 28,
+    "atributos_inmutables": 19,
+    "atributos_numericos": 8,
+    "atributos_booleanos": 15,
+    "atributos_enumerados": 12,
+    "atributos_referenciales": 12
+  }
+}

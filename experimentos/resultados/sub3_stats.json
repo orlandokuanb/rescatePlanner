@@ -1,0 +1,13 @@
+{
+  "problema": "sub3_puente_c3.pddl",
+  "dominio": "dominio_rescate.pddl",
+  "timestamp": "2025-11-12T09:29:16.048721",
+  "numero_acciones": 2,
+  "tiempo_planificacion_seg": 0.002,
+  "planificador": "auto",
+  "plan_encontrado": true,
+  "acciones_por_tipo": {
+    "TRASLADAR_UNIDAD": 1,
+    "INSTALAR_PUENTE_COLGANTE": 1
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "problema": "sub1_puente_c1",
+  "numero_acciones": 17,
+  "metrica_1_eficiencia": {
+    "acciones_minimas_teoricas": 15,
+    "acciones_plan": 17,
+    "eficiencia": 0.882,
+    "porcentaje": 88.2,
+    "evaluacion": "EXCELENTE",
+    "cumple_target": true
+  },
+  "metrica_2_utilizacion_recursos": {
+    "unidades_usadas": [
+      "U1"
+    ],
+    "personal_rescate_usado": [],
+    "personal_construccion_usado": [
+      "TECNICOC1_2",
+      "TECNICOC1_1",
+      "TECNICOC1_3"
+    ],
+    "recursos_usados": 4,
+    "recursos_disponibles": 31,
+    "porcentaje_utilizacion": 12.9,
+    "evaluacion": "SUBUTILIZACIN",
+    "cumple_target": false
+  },
+  "metrica_3_prioridad_victimas": {
+    "victimas_graves_atendidas": 0,
+    "total_victimas_graves": 4,
+    "prioridad_respetada": true,
+    "porcentaje": 100.0,
+    "evaluacion": "CORRECTO",
+    "cumple_target": true
+  },
+  "metrica_4_costo_operacional": {
+    "numero_viajes": 2,
+    "costo_total_km": 20.0,
+    "cota_superior_km": 540,
+    "eficiencia_costo": 96.3,
+    "viajes": [
+      {
+        "unidad": "U1",
+        "origen": "C0",
+        "destino": "C1",
+        "distancia_km": 10
+      },
+      {
+        "unidad": "U1",
+        "origen": "C1",
+        "destino": "C0",
+        "distancia_km": 10
+      }
+    ]
+  },
+  "acciones_por_tipo": {
+    "CARGAR_RECURSO": 1,
+    "CARGAR_PERSONA": 6,
+    "TRASLADAR_UNIDAD": 2,
+    "DESCARGAR_RECURSO": 1,
+    "DESCARGAR_PERSONA": 6,
+    "CONSTRUIR_PUENTE_PPF": 1
+  },
+  "complejidad_plan": {
+    "locaciones_visitadas": 3,
+    "promedio_acciones_por_locacion": 5.7
+  }
+}

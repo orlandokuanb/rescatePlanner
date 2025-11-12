@@ -1,0 +1,13 @@
+{
+  "problema": "problema_rescate.pddl",
+  "dominio": "dominio_rescate.pddl",
+  "timestamp": "2025-11-12T09:29:16.071626",
+  "numero_acciones": 2,
+  "tiempo_planificacion_seg": 0.004,
+  "planificador": "auto",
+  "plan_encontrado": true,
+  "acciones_por_tipo": {
+    "CONSTRUCCIÓN": 1,
+    "RESCATE": 1
+  }
+}

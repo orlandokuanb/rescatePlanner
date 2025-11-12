@@ -1,0 +1,54 @@
+{
+  "problema": "sub2_carretera_c2",
+  "numero_acciones": 2,
+  "metrica_1_eficiencia": {
+    "acciones_minimas_teoricas": 30,
+    "acciones_plan": 2,
+    "eficiencia": 1.0,
+    "porcentaje": 100.0,
+    "evaluacion": "EXCELENTE",
+    "cumple_target": true
+  },
+  "metrica_2_utilizacion_recursos": {
+    "unidades_usadas": [
+      "UP"
+    ],
+    "personal_rescate_usado": [],
+    "personal_construccion_usado": [],
+    "recursos_usados": 1,
+    "recursos_disponibles": 31,
+    "porcentaje_utilizacion": 3.2,
+    "evaluacion": "SUBUTILIZACIN",
+    "cumple_target": false
+  },
+  "metrica_3_prioridad_victimas": {
+    "victimas_graves_atendidas": 0,
+    "total_victimas_graves": 4,
+    "prioridad_respetada": true,
+    "porcentaje": 100.0,
+    "evaluacion": "CORRECTO",
+    "cumple_target": true
+  },
+  "metrica_4_costo_operacional": {
+    "numero_viajes": 1,
+    "costo_total_km": 10.0,
+    "cota_superior_km": 540,
+    "eficiencia_costo": 98.1,
+    "viajes": [
+      {
+        "unidad": "UP",
+        "origen": "C0",
+        "destino": "C1",
+        "distancia_km": 10
+      }
+    ]
+  },
+  "acciones_por_tipo": {
+    "TRASLADAR_UNIDAD": 1,
+    "CONSTRUIR_CARRETERA": 1
+  },
+  "complejidad_plan": {
+    "locaciones_visitadas": 4,
+    "promedio_acciones_por_locacion": 0.5
+  }
+}

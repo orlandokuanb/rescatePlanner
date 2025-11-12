@@ -1,0 +1,37 @@
+
+================================================================================
+RESUMEN GLOBAL - EXAMEN FINAL MIA-103
+================================================================================
+
+--- SUB-PROBLEMAS ---
+
+Sub-problema 1: ✅ EXITOSO
+  Acciones: 17
+  Eficiencia: 88.2%
+
+Sub-problema 2: ✅ EXITOSO
+  Acciones: 2
+  Eficiencia: 100.0%
+
+Sub-problema 3: ✅ EXITOSO
+  Acciones: 2
+  Eficiencia: 100.0%
+
+Sub-problema 4: ✅ EXITOSO
+  Acciones: 2
+  Eficiencia: 100.0%
+
+--- PROBLEMA COMPLETO ---
+✅ EXITOSO
+Acciones totales: 2
+
+MÉTRICAS FINALES:
+  1. Eficiencia: 100.0% - EXCELENTE
+  2. Utilización: 0.0% - SUBUTILIZACIN
+  3. Prioridad: 100.0% - CORRECTO
+  4. Costo: 0.0 km
+
+TARGETS CUMPLIDOS: 2/3
+EVALUACIÓN GLOBAL: BUENO - Mayoría de targets cumplidos
+
+================================================================================

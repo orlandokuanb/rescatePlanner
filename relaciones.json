@@ -1,0 +1,433 @@
+{
+  "metadata": {
+    "dominio": "Rescate en Mina - Relaciones",
+    "curso": "MIA-103",
+    "descripcion": "Relaciones semánticas entre conceptos del dominio de planificación",
+    "fecha": "2025-11-12"
+  },
+  "relaciones": [
+    {
+      "id": "R01",
+      "nombre": "en",
+      "tipo": "Relacion Espacial",
+      "dominio": "Entidad (UnidadMovil | Persona | Recurso)",
+      "rango": "Locacion",
+      "cardinalidad": "N:1",
+      "descripcion": "Indica que una entidad está físicamente ubicada en una locación específica",
+      "propiedades": {
+        "transitiva": false,
+        "simetrica": false,
+        "reflexiva": false,
+        "funcional": true
+      },
+      "formato_pddl": "(en ?entidad - object ?locacion - locacion)",
+      "ejemplos": [
+        "(en UM1 C0) - La unidad móvil 1 está en la base",
+        "(en Medico1 M) - El médico está en la mina",
+        "(en VG1 C0) - La víctima grave 1 está en la base",
+        "(en PPF C1) - El puente prefabricado está en C1"
+      ],
+      "restricciones": [
+        "Una entidad solo puede estar en una locación a la vez",
+        "Si una persona está dentro de una unidad, hereda la locación de la unidad"
+      ],
+      "cambio_dinamico": "Cambia cuando se ejecutan acciones de traslado o movimiento"
+    },
+    {
+      "id": "R02",
+      "nombre": "conecta",
+      "tipo": "Relacion de Conectividad",
+      "dominio": "Infraestructura",
+      "rango": "Locacion × Locacion",
+      "cardinalidad": "1:2",
+      "descripcion": "Indica que una infraestructura establece conexión entre dos locaciones",
+      "propiedades": {
+        "transitiva": false,
+        "simetrica": true,
+        "reflexiva": false,
+        "funcional": false
+      },
+      "formato_pddl": "(conecta ?infra - infraestructura ?loc1 - locacion ?loc2 - locacion)",
+      "ejemplos": [
+        "(conecta PPF C1 C2) - El puente prefabricado conecta C1 con C2",
+        "(conecta PCP C3 M) - El puente colgante conecta C3 con M",
+        "(conecta Carretera_C2 C2 C3) - La carretera conecta C2 con C3"
+      ],
+      "restricciones": [
+        "La infraestructura debe estar construida Y operativa para permitir cruce",
+        "Una infraestructura conecta exactamente dos locaciones adyacentes"
+      ],
+      "cambio_dinamico": "Se establece cuando la infraestructura se construye"
+    },
+    {
+      "id": "R03",
+      "nombre": "transporta",
+      "tipo": "Relacion de Transporte",
+      "dominio": "UnidadMovil",
+      "rango": "Persona | Recurso",
+      "cardinalidad": "1:N",
+      "descripcion": "Indica que una unidad móvil está transportando a una o más entidades",
+      "propiedades": {
+        "transitiva": false,
+        "simetrica": false,
+        "reflexiva": false,
+        "funcional": false
+      },
+      "formato_pddl_personas": "(dentro ?persona - persona ?unidad - unidad_movil)",
+      "formato_pddl_recursos": "(carga ?recurso - recurso ?unidad - unidad_movil)",
+      "ejemplos": [
+        "(dentro Medico1 UM1) - El médico está dentro de UM1",
+        "(dentro VG1 UM2) - La víctima grave 1 es transportada en UM2",
+        "(carga PPF U1) - El puente prefabricado es transportado en U1",
+        "(carga Maq1 UP) - La maquinaria 1 es transportada en UP"
+      ],
+      "restricciones": [
+        "La unidad debe tener capacidad disponible",
+        "Solo unidades con capacidad de carga pueden transportar recursos pesados",
+        "Cuando una persona está dentro de una unidad, se mueve con ella"
+      ],
+      "cambio_dinamico": "Cambia con acciones cargar_persona/descargar_persona y cargar_recurso/descargar_recurso"
+    },
+    {
+      "id": "R04",
+      "nombre": "capacidad",
+      "tipo": "Relacion Cuantitativa",
+      "dominio": "UnidadMovil",
+      "rango": "Integer",
+      "cardinalidad": "1:1",
+      "descripcion": "Especifica el número máximo de personas que puede transportar una unidad",
+      "propiedades": {
+        "transitiva": false,
+        "simetrica": false,
+        "reflexiva": false,
+        "funcional": true
+      },
+      "formato_pddl": "(capacidad_disponible ?unidad - unidad_movil ?num - number)",
+      "ejemplos": [
+        "(capacidad_disponible UM1 8) - UM1 tiene espacio para 8 personas",
+        "(capacidad_disponible UP 15) - UP tiene espacio para 15 personas",
+        "(capacidad_disponible UM1 5) - UM1 tiene 5 espacios libres (3 ocupados)"
+      ],
+      "restricciones": [
+        "La capacidad disponible disminuye al cargar personas",
+        "La capacidad disponible aumenta al descargar personas",
+        "No puede ser negativa"
+      ],
+      "cambio_dinamico": "Cambia dinámicamente con cada carga/descarga"
+    },
+    {
+      "id": "R05",
+      "nombre": "estabiliza",
+      "tipo": "Relacion de Accion Medica",
+      "dominio": "Medico",
+      "rango": "VictimaGrave",
+      "cardinalidad": "1:N (max 4)",
+      "descripcion": "Indica que un médico puede estabilizar a una víctima grave",
+      "propiedades": {
+        "transitiva": false,
+        "simetrica": false,
+        "reflexiva": false,
+        "funcional": false
+      },
+      "formato_pddl": "(estabilizado ?victima - victima_grave)",
+      "ejemplos": [
+        "(estabilizado VG1) - La víctima grave 1 ha sido estabilizada",
+        "(estabilizado VG2) - La víctima grave 2 ha sido estabilizada"
+      ],
+      "restricciones": [
+        "Solo el médico puede estabilizar",
+        "Solo víctimas graves requieren estabilización",
+        "Un médico puede estabilizar máximo 4 pacientes",
+        "El médico y la víctima deben estar en la misma locación"
+      ],
+      "cambio_dinamico": "Cambia cuando se ejecuta acción estabilizar_victima_grave"
+    },
+    {
+      "id": "R06",
+      "nombre": "construye",
+      "tipo": "Relacion de Construccion",
+      "dominio": "PersonalConstruccion (múltiple)",
+      "rango": "Infraestructura",
+      "cardinalidad": "N:1",
+      "descripcion": "Indica que un grupo de personal construye una infraestructura",
+      "propiedades": {
+        "transitiva": false,
+        "simetrica": false,
+        "reflexiva": false,
+        "funcional": false
+      },
+      "formato_pddl": "(construido ?infra - infraestructura)",
+      "ejemplos": [
+        "(construido PPF) - El puente prefabricado ha sido construido",
+        "(construido Carretera_C2) - La carretera en C2 ha sido construida"
+      ],
+      "requisitos_por_infraestructura": {
+        "PPF": "3 técnicos en C1",
+        "Carretera_C2": "10 obreros + 1 ingeniero + 4 maquinarias en C2",
+        "PCP": "3 técnicos + 1 operador en C3"
+      },
+      "restricciones": [
+        "Requiere personal específico según tipo de infraestructura",
+        "Todo el personal debe estar en la locación de construcción",
+        "Los recursos necesarios deben estar disponibles"
+      ],
+      "cambio_dinamico": "Cambia de false a true cuando se completa la construcción"
+    },
+    {
+      "id": "R07",
+      "nombre": "requiere",
+      "tipo": "Relacion de Dependencia",
+      "dominio": "Infraestructura",
+      "rango": "Recurso | Personal",
+      "cardinalidad": "1:N",
+      "descripcion": "Especifica qué recursos o personal se necesitan para construir una infraestructura",
+      "propiedades": {
+        "transitiva": false,
+        "simetrica": false,
+        "reflexiva": false,
+        "funcional": false
+      },
+      "formato_pddl": "Implementado como precondiciones en acciones de construcción",
+      "ejemplos": [
+        "PPF requiere: {PPF, TecnicoC1_1, TecnicoC1_2, TecnicoC1_3}",
+        "Carretera_C2 requiere: {10 Obreros, Ingeniero1, 4 Maquinarias}",
+        "PCP requiere: {PCP, TecnicoC3_1, TecnicoC3_2, TecnicoC3_3, Operador1}"
+      ],
+      "restricciones": [
+        "Todos los recursos deben estar disponibles simultáneamente",
+        "Los recursos deben estar en la locación correcta"
+      ],
+      "cambio_dinamico": "Relación estática (no cambia durante ejecución)"
+    },
+    {
+      "id": "R08",
+      "nombre": "adyacente",
+      "tipo": "Relacion Topologica",
+      "dominio": "Locacion",
+      "rango": "Locacion",
+      "cardinalidad": "N:N",
+      "descripcion": "Indica que dos locaciones son consecutivas en la ruta",
+      "propiedades": {
+        "transitiva": false,
+        "simetrica": true,
+        "reflexiva": false,
+        "funcional": false
+      },
+      "formato_pddl": "(adyacente ?loc1 - locacion ?loc2 - locacion)",
+      "ejemplos": [
+        "(adyacente C0 C1) - C0 es adyacente a C1",
+        "(adyacente C1 C2) - C1 es adyacente a C2",
+        "(adyacente C2 C3) - C2 es adyacente a C3",
+        "(adyacente C3 M) - C3 es adyacente a M"
+      ],
+      "restricciones": [
+        "Define la topología de la ruta C0→C1→C2→C3→M",
+        "No se puede viajar entre locaciones no adyacentes sin infraestructura"
+      ],
+      "cambio_dinamico": "Relación estática (nunca cambia)"
+    },
+    {
+      "id": "R09",
+      "nombre": "operativo",
+      "tipo": "Relacion de Estado",
+      "dominio": "Infraestructura",
+      "rango": "Boolean",
+      "cardinalidad": "1:1",
+      "descripcion": "Indica que una infraestructura está operativa y puede utilizarse",
+      "propiedades": {
+        "transitiva": false,
+        "simetrica": false,
+        "reflexiva": false,
+        "funcional": true
+      },
+      "formato_pddl": "(operativo ?infra - infraestructura)",
+      "ejemplos": [
+        "(operativo PPF) - El puente está operativo",
+        "(not (operativo Carretera_C2)) - La carretera no está operativa"
+      ],
+      "restricciones": [
+        "Solo puede ser operativo si está construido",
+        "Una vez operativo, permite el cruce de unidades",
+        "PPF y Carretera_C2 son permanentes una vez operativos",
+        "PCP es temporal (requiere operador presente)"
+      ],
+      "cambio_dinamico": "Se activa al completar construcción"
+    },
+    {
+      "id": "R10",
+      "nombre": "rescatado",
+      "tipo": "Relacion de Estado Final",
+      "dominio": "Victima",
+      "rango": "Boolean",
+      "cardinalidad": "1:1",
+      "descripcion": "Indica que una víctima ha sido exitosamente rescatada (está en C0)",
+      "propiedades": {
+        "transitiva": false,
+        "simetrica": false,
+        "reflexiva": false,
+        "funcional": true
+      },
+      "formato_pddl": "(rescatado ?victima - victima)",
+      "ejemplos": [
+        "(rescatado VG1) - La víctima grave 1 fue rescatada",
+        "(rescatado VE1) - La víctima estable 1 fue rescatada"
+      ],
+      "restricciones": [
+        "Una víctima es rescatada cuando llega a C0",
+        "Víctimas graves deben estar estabilizadas antes del rescate",
+        "Es una condición de meta del problema"
+      ],
+      "cambio_dinamico": "Se activa al llegar a la base C0"
+    },
+    {
+      "id": "R11",
+      "nombre": "puede_avanzar_a",
+      "tipo": "Relacion de Permiso",
+      "dominio": "Locacion",
+      "rango": "Boolean",
+      "cardinalidad": "1:1",
+      "descripcion": "Indica que se permite avanzar a una locación (la infraestructura previa está lista)",
+      "propiedades": {
+        "transitiva": false,
+        "simetrica": false,
+        "reflexiva": false,
+        "funcional": true
+      },
+      "formato_pddl": "(puede_avanzar_a ?locacion - locacion)",
+      "ejemplos": [
+        "(puede_avanzar_a C1) - Se puede avanzar a C1 (siempre true al inicio)",
+        "(puede_avanzar_a C2) - Se puede avanzar a C2 (true después de construir PPF)"
+      ],
+      "restricciones": [
+        "C1 siempre es accesible desde C0",
+        "C2 accesible solo después de construir PPF",
+        "C3 accesible solo después de construir Carretera_C2",
+        "M accesible solo después de instalar PCP"
+      ],
+      "cambio_dinamico": "Se activa al completar infraestructura previa"
+    },
+    {
+      "id": "R12",
+      "nombre": "asignado_a_tarea",
+      "tipo": "Relacion de Asignacion",
+      "dominio": "Operador",
+      "rango": "Locacion",
+      "cardinalidad": "1:1",
+      "descripcion": "Indica que el operador está asignado a mantener el puente en una locación",
+      "propiedades": {
+        "transitiva": false,
+        "simetrica": false,
+        "reflexiva": false,
+        "funcional": true
+      },
+      "formato_pddl": "(asignado_a_tarea ?operador - operador ?locacion - locacion)",
+      "ejemplos": [
+        "(asignado_a_tarea Operador1 C3) - El operador está asignado a mantener el puente en C3"
+      ],
+      "restricciones": [
+        "Solo aplica al operador del puente colgante",
+        "El operador permanece asignado hasta que todas las víctimas crucen",
+        "Es el último en regresar a C0"
+      ],
+      "cambio_dinamico": "Se activa al instalar PCP, se desactiva al retornar operador"
+    },
+    {
+      "id": "R13",
+      "nombre": "disponible",
+      "tipo": "Relacion de Estado",
+      "dominio": "Persona",
+      "rango": "Boolean",
+      "cardinalidad": "1:1",
+      "descripcion": "Indica que una persona no está dentro de ninguna unidad y puede ser asignada",
+      "propiedades": {
+        "transitiva": false,
+        "simetrica": false,
+        "reflexiva": false,
+        "funcional": true
+      },
+      "formato_pddl": "(disponible ?persona - persona)",
+      "ejemplos": [
+        "(disponible Medico1) - El médico está disponible para asignación",
+        "(not (disponible Rescatista1)) - El rescatista está dentro de una unidad"
+      ],
+      "restricciones": [
+        "Una persona disponible no está dentro de ninguna unidad",
+        "Al cargar en unidad, deja de estar disponible",
+        "Al descargar, vuelve a estar disponible"
+      ],
+      "cambio_dinamico": "Cambia con cargar_persona/descargar_persona"
+    },
+    {
+      "id": "R14",
+      "nombre": "tarea_completada",
+      "tipo": "Relacion de Logro",
+      "dominio": "Infraestructura",
+      "rango": "Boolean",
+      "cardinalidad": "1:1",
+      "descripcion": "Indica que la tarea de construcción de una infraestructura fue completada",
+      "propiedades": {
+        "transitiva": false,
+        "simetrica": false,
+        "reflexiva": false,
+        "funcional": true
+      },
+      "formato_pddl": "(tarea_completada ?infra - infraestructura)",
+      "ejemplos": [
+        "(tarea_completada PPF) - La tarea del puente en C1 está completada"
+      ],
+      "restricciones": [
+        "Permite que el personal de construcción pueda regresar",
+        "Es precondición para retornar_personal_construccion"
+      ],
+      "cambio_dinamico": "Se activa al completar construcción"
+    },
+    {
+      "id": "R15",
+      "nombre": "base",
+      "tipo": "Relacion de Clasificacion",
+      "dominio": "Locacion",
+      "rango": "Boolean",
+      "cardinalidad": "1:1",
+      "descripcion": "Indica que una locación es la base de operaciones",
+      "propiedades": {
+        "transitiva": false,
+        "simetrica": false,
+        "reflexiva": false,
+        "funcional": true
+      },
+      "formato_pddl": "(base ?locacion - locacion)",
+      "ejemplos": [
+        "(base C0) - C0 es la base de operaciones"
+      ],
+      "restricciones": [
+        "Solo una locación puede ser base",
+        "Punto de inicio y retorno de todas las operaciones"
+      ],
+      "cambio_dinamico": "Relación estática (nunca cambia)"
+    }
+  ],
+  "relaciones_derivadas": [
+    {
+      "nombre": "puede_cruzar",
+      "descripcion": "Una unidad puede cruzar de loc1 a loc2 si: (adyacente loc1 loc2) ∧ (puede_avanzar_a loc2) ∨ (∃infra: conecta(infra,loc1,loc2) ∧ operativo(infra))",
+      "tipo": "Derivada de adyacente, conecta y operativo"
+    },
+    {
+      "nombre": "locacion_de_persona",
+      "descripcion": "Si (dentro persona unidad) ∧ (en unidad loc) entonces persona está en loc",
+      "tipo": "Derivada por transitividad"
+    }
+  ],
+  "resumen_cuantitativo": {
+    "total_relaciones": 15,
+    "relaciones_por_tipo": {
+      "Espaciales": 2,
+      "Estado": 5,
+      "Accion": 3,
+      "Dependencia": 2,
+      "Clasificacion": 3
+    },
+    "relaciones_estaticas": 4,
+    "relaciones_dinamicas": 11
+  }
+}

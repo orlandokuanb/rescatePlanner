@@ -1,0 +1,45 @@
+{
+  "problema": "problema_rescate",
+  "numero_acciones": 2,
+  "metrica_1_eficiencia": {
+    "acciones_minimas_teoricas": 100,
+    "acciones_plan": 2,
+    "eficiencia": 1.0,
+    "porcentaje": 100.0,
+    "evaluacion": "EXCELENTE",
+    "cumple_target": true
+  },
+  "metrica_2_utilizacion_recursos": {
+    "unidades_usadas": [],
+    "personal_rescate_usado": [],
+    "personal_construccion_usado": [],
+    "recursos_usados": 0,
+    "recursos_disponibles": 31,
+    "porcentaje_utilizacion": 0.0,
+    "evaluacion": "SUBUTILIZACIN",
+    "cumple_target": false
+  },
+  "metrica_3_prioridad_victimas": {
+    "victimas_graves_atendidas": 0,
+    "total_victimas_graves": 4,
+    "prioridad_respetada": true,
+    "porcentaje": 100.0,
+    "evaluacion": "CORRECTO",
+    "cumple_target": true
+  },
+  "metrica_4_costo_operacional": {
+    "numero_viajes": 0,
+    "costo_total_km": 0.0,
+    "cota_superior_km": 540,
+    "eficiencia_costo": 100.0,
+    "viajes": []
+  },
+  "acciones_por_tipo": {
+    "CONSTRUCCIÓN": 1,
+    "RESCATE": 1
+  },
+  "complejidad_plan": {
+    "locaciones_visitadas": 1,
+    "promedio_acciones_por_locacion": 2.0
+  }
+}

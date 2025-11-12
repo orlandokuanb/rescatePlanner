@@ -1,0 +1,33 @@
+
+================================================================================
+PLAN DE ACCIÓN GENERADO
+================================================================================
+
+Problema: sub1_puente_c1.pddl
+Dominio: dominio_rescate.pddl
+Número de acciones: 17
+Tiempo de planificación: 0.02s
+
+--------------------------------------------------------------------------------
+SECUENCIA DE ACCIONES:
+--------------------------------------------------------------------------------
+
+  [  1]  CARGAR_RECURSO PPF U1 C0
+  [  2]  CARGAR_PERSONA TECNICOC1_1 U1 C0
+  [  3]  CARGAR_PERSONA TECNICOC1_2 U1 C0
+  [  4]  CARGAR_PERSONA TECNICOC1_3 U1 C0
+  [  5]  TRASLADAR_UNIDAD U1 C0 C1
+  [  6]  DESCARGAR_RECURSO PPF U1 C1
+  [  7]  DESCARGAR_PERSONA TECNICOC1_1 U1 C1
+  [  8]  DESCARGAR_PERSONA TECNICOC1_2 U1 C1
+  [  9]  DESCARGAR_PERSONA TECNICOC1_3 U1 C1
+  [ 10]  CONSTRUIR_PUENTE_PPF PPF C1 C2 TECNICOC1_1 TECNICOC1_2 TECNICOC1_3
+  [ 11]  CARGAR_PERSONA TECNICOC1_1 U1 C1
+  [ 12]  CARGAR_PERSONA TECNICOC1_2 U1 C1
+  [ 13]  CARGAR_PERSONA TECNICOC1_3 U1 C1
+  [ 14]  TRASLADAR_UNIDAD U1 C1 C0
+  [ 15]  DESCARGAR_PERSONA TECNICOC1_1 U1 C0
+  [ 16]  DESCARGAR_PERSONA TECNICOC1_2 U1 C0
+  [ 17]  DESCARGAR_PERSONA TECNICOC1_3 U1 C0
+
+================================================================================

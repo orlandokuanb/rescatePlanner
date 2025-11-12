@@ -1,0 +1,28 @@
+
+================================================================================
+REPORTE DE MTRICAS DE RACIONALIDAD
+================================================================================
+
+Problema: sub1_puente_c1
+Nmero de acciones: 17
+
+--------------------------------------------------------------------------------
+RESUMEN DE MTRICAS
+--------------------------------------------------------------------------------
+
+1. EFICIENCIA DEL PLAN: 88.2%
+   Evaluacin: EXCELENTE
+   Cumple target:  S
+
+2. UTILIZACIN DE RECURSOS: 12.9%
+   Evaluacin: SUBUTILIZACIN
+   Cumple target:  NO
+
+3. PRIORIDAD VCTIMAS GRAVES: 100.0%
+   Evaluacin: CORRECTO
+   Cumple target:  S
+
+4. COSTO OPERACIONAL: 20.0 km
+   Eficiencia: 96.3%
+
+================================================================================

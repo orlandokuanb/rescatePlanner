@@ -1,0 +1,28 @@
+
+================================================================================
+REPORTE DE MTRICAS DE RACIONALIDAD
+================================================================================
+
+Problema: sub4_rescate_solo
+Nmero de acciones: 2
+
+--------------------------------------------------------------------------------
+RESUMEN DE MTRICAS
+--------------------------------------------------------------------------------
+
+1. EFICIENCIA DEL PLAN: 100.0%
+   Evaluacin: EXCELENTE
+   Cumple target:  S
+
+2. UTILIZACIN DE RECURSOS: 6.5%
+   Evaluacin: SUBUTILIZACIN
+   Cumple target:  NO
+
+3. PRIORIDAD VCTIMAS GRAVES: 100.0%
+   Evaluacin: CORRECTO
+   Cumple target:  S
+
+4. COSTO OPERACIONAL: 10.0 km
+   Eficiencia: 98.1%
+
+================================================================================

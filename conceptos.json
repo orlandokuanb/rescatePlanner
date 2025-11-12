@@ -1,0 +1,299 @@
+{
+  "metadata": {
+    "dominio": "Rescate en Mina con Construcción de Infraestructura",
+    "curso": "MIA-103 - Fundamentos de Inteligencia Artificial",
+    "fecha_creacion": "2025-11-12",
+    "version": "1.0"
+  },
+  "conceptos": [
+    {
+      "id": "C01",
+      "nombre": "Locacion",
+      "categoria": "Entidad Espacial",
+      "descripcion": "Punto geográfico específico en la ruta de rescate. Representa lugares físicos donde pueden ubicarse entidades y donde se realizan acciones.",
+      "instancias": ["C0", "C1", "C2", "C3", "M"],
+      "propiedades_comunes": [
+        "Tiene nombre único",
+        "Puede contener múltiples entidades",
+        "Está conectada a otras locaciones",
+        "Puede tener tipo especial (base, zona_desastre, zona_estacionamiento)"
+      ],
+      "tipo_pddl": "locacion"
+    },
+    {
+      "id": "C02",
+      "nombre": "UnidadMovil",
+      "categoria": "Recurso de Transporte",
+      "descripcion": "Vehículo motorizado capaz de transportar personas y/o carga entre locaciones. Tiene capacidad limitada y requiere conductor.",
+      "instancias": ["UM1", "UM2", "U1", "UP", "UX", "U3"],
+      "propiedades_comunes": [
+        "Tiene capacidad específica de personas",
+        "Puede o no transportar carga pesada",
+        "Requiere conductor asignado (no contabilizado en capacidad)",
+        "Puede moverse entre locaciones adyacentes o a través de infraestructura"
+      ],
+      "subtipos": {
+        "UM": "Unidad Móvil Universal (capacidad 8 personas)",
+        "U1": "Unidad de Construcción Tipo 1 (puente + 3 técnicos)",
+        "UP": "Unidad de Personal (capacidad 15 personas)",
+        "UX": "Unidad de Carga Especial (puente colgante)",
+        "U3": "Unidad de Técnicos (capacidad 10 personas)"
+      },
+      "tipo_pddl": "unidad_movil"
+    },
+    {
+      "id": "C03",
+      "nombre": "PersonalRescate",
+      "categoria": "Agente Humano - Rescate",
+      "descripcion": "Personal especializado en operaciones de rescate y atención de víctimas. Tiene habilidades específicas según su rol.",
+      "instancias": ["Medico1", "Rescatista1", "Rescatista2", "Asistente1"],
+      "propiedades_comunes": [
+        "Puede ser transportado en unidades móviles",
+        "Tiene habilidad específica según rol",
+        "Requiere retornar a base al finalizar misión"
+      ],
+      "subtipos": {
+        "Medico": "Puede estabilizar hasta 4 víctimas graves",
+        "Rescatista": "Puede trasladar hasta 5 víctimas y cuidarlas",
+        "Asistente": "Proporciona alimentos y abrigo"
+      },
+      "tipo_pddl": "personal_rescate"
+    },
+    {
+      "id": "C04",
+      "nombre": "PersonalConstruccion",
+      "categoria": "Agente Humano - Construcción",
+      "descripcion": "Personal especializado en construcción de infraestructura. Realiza tareas temporales y debe regresar a base.",
+      "instancias": [
+        "TecnicoC1_1", "TecnicoC1_2", "TecnicoC1_3",
+        "TecnicoC3_1", "TecnicoC3_2", "TecnicoC3_3",
+        "Obrero1", "Obrero2", "Obrero3", "Obrero4", "Obrero5",
+        "Obrero6", "Obrero7", "Obrero8", "Obrero9", "Obrero10",
+        "Ingeniero1",
+        "Operador1"
+      ],
+      "propiedades_comunes": [
+        "Puede ser transportado en unidades móviles",
+        "Participa en construcción de infraestructura",
+        "Debe regresar a C0 después de completar tarea"
+      ],
+      "subtipos": {
+        "Tecnico": "Instala puentes (requiere 3 para cada puente)",
+        "Obrero": "Construye carreteras (requiere 10 para carretera)",
+        "Ingeniero": "Supervisa construcción de carretera (requiere 1)",
+        "Operador": "Mantiene puente colgante operativo (se queda en C3)"
+      },
+      "tipo_pddl": "personal_construccion"
+    },
+    {
+      "id": "C05",
+      "nombre": "Victima",
+      "categoria": "Persona - Objetivo de Rescate",
+      "descripcion": "Persona afectada por el incendio en la mina que requiere ser rescatada y trasladada a la base.",
+      "instancias": [
+        "VG1", "VG2", "VG3", "VG4",
+        "VE1", "VE2", "VE3",
+        "VNA1", "VNA2", "VNA3"
+      ],
+      "propiedades_comunes": [
+        "Está inicialmente en la mina (M)",
+        "Requiere evacuación a base (C0)",
+        "Puede ser transportada en unidades móviles",
+        "Tiene estado de salud"
+      ],
+      "subtipos": {
+        "VictimaGrave": "No estable, requiere estabilización médica URGENTE (4 víctimas)",
+        "VictimaEstable": "Estable, no grave, requiere evacuación (3 víctimas)",
+        "VictimaNoAfectada": "Sin lesiones pero requiere evacuación (3 víctimas)"
+      },
+      "prioridad_atencion": {
+        "1_CRITICA": "VictimaGrave (debe ser estabilizada antes que las demás)",
+        "2_ALTA": "VictimaEstable",
+        "3_MEDIA": "VictimaNoAfectada"
+      },
+      "tipo_pddl": "victima"
+    },
+    {
+      "id": "C06",
+      "nombre": "Infraestructura",
+      "categoria": "Construcción Física",
+      "descripcion": "Estructuras físicas que deben construirse para permitir el paso de unidades móviles. Conectan locaciones.",
+      "instancias": ["PPF", "Carretera_C2", "PCP"],
+      "propiedades_comunes": [
+        "Requiere construcción antes de ser utilizable",
+        "Conecta dos locaciones específicas",
+        "Una vez construida, permite tránsito",
+        "Requiere recursos específicos para construcción"
+      ],
+      "subtipos": {
+        "Puente": "Estructura sobre río o barranco (PPF en C1)",
+        "Carretera": "Vía terrestre de 500m (en C2)",
+        "PuenteColgante": "Puente temporal que requiere operador (PCP en C3)"
+      },
+      "tipo_pddl": "infraestructura"
+    },
+    {
+      "id": "C07",
+      "nombre": "Recurso",
+      "categoria": "Material o Equipo",
+      "descripcion": "Objetos físicos necesarios para realizar construcciones. Pueden ser transportados por unidades especiales.",
+      "instancias": ["PPF", "PCP", "Maq1", "Maq2", "Maq3", "Maq4", "Alimentos", "Abrigo"],
+      "propiedades_comunes": [
+        "Puede ser cargado en unidades móviles especiales",
+        "Ocupa espacio de carga",
+        "Se utiliza en ubicación específica"
+      ],
+      "subtipos": {
+        "PuentePrefabricado_PPF": "Puente para C1 (transportado en U1)",
+        "PuenteColgantePrefabricado_PCP": "Puente para C3 (transportado en UX)",
+        "Maquinaria": "Equipo pesado para construcción (4 unidades para carretera)",
+        "Suministros": "Alimentos y abrigo para víctimas"
+      },
+      "tipo_pddl": "recurso"
+    },
+    {
+      "id": "C08",
+      "nombre": "EstadoSalud",
+      "categoria": "Atributo Enumerado",
+      "descripcion": "Condición médica de una víctima que determina el tipo de atención requerida.",
+      "valores_posibles": ["Grave", "Estable", "NoAfectado", "Estabilizado"],
+      "descripcion_valores": {
+        "Grave": "Víctima en estado crítico, requiere estabilización inmediata del médico",
+        "Estable": "Víctima sin riesgo inmediato, puede esperar evacuación",
+        "NoAfectado": "Víctima sin lesiones, solo requiere evacuación",
+        "Estabilizado": "Víctima grave que ya recibió atención médica"
+      },
+      "transiciones_validas": {
+        "Grave": "→ Estabilizado (por acción del Médico)",
+        "Estable": "→ sin cambios",
+        "NoAfectado": "→ sin cambios"
+      },
+      "tipo_pddl": "estado_enum (implementado como tipos)"
+    },
+    {
+      "id": "C09",
+      "nombre": "EstadoInfraestructura",
+      "categoria": "Atributo Enumerado",
+      "descripcion": "Estado de construcción de una infraestructura que determina si puede utilizarse.",
+      "valores_posibles": ["NoConstruido", "EnConstruccion", "Operativo"],
+      "descripcion_valores": {
+        "NoConstruido": "Infraestructura no existe, materiales pueden estar en C0",
+        "EnConstruccion": "Trabajo en progreso (opcional en modelo simplificado)",
+        "Operativo": "Infraestructura completa y utilizable para cruzar"
+      },
+      "transiciones_validas": {
+        "NoConstruido": "→ Operativo (por acción construir con personal y recursos)",
+        "Operativo": "→ sin cambios (infraestructura permanente, excepto PCP que es temporal)"
+      },
+      "tipo_pddl": "estado_enum (implementado como predicados)"
+    },
+    {
+      "id": "C10",
+      "nombre": "Capacidad",
+      "categoria": "Atributo Numérico",
+      "descripcion": "Límite máximo de personas o carga que puede transportar una unidad móvil.",
+      "tipo_dato": "Integer",
+      "rango_valores": {
+        "minimo": 0,
+        "maximo": 15,
+        "unidad": "personas (sin contar conductor)"
+      },
+      "aplicacion": {
+        "UM1": 8,
+        "UM2": 8,
+        "U1": 3,
+        "UP": 15,
+        "UX": 0,
+        "U3": 10
+      },
+      "tipo_pddl": "number (fluent numerico)"
+    },
+    {
+      "id": "C11",
+      "nombre": "Conductor",
+      "categoria": "Agente Humano - Operación",
+      "descripcion": "Personal asignado permanentemente a operar una unidad móvil. No cuenta para capacidad de transporte.",
+      "instancias": ["CondUM1", "CondUM2", "CondU1", "CondUP", "CondUX", "CondU3"],
+      "propiedades_comunes": [
+        "Asignado permanentemente a una unidad específica",
+        "No cuenta para cálculo de capacidad disponible",
+        "Siempre está con su unidad",
+        "Tiene recursos suficientes para mantenerse"
+      ],
+      "tipo_pddl": "conductor"
+    },
+    {
+      "id": "C12",
+      "nombre": "ZonaEstacionamiento",
+      "categoria": "Tipo Especial de Locación",
+      "descripcion": "Área designada donde las unidades pueden estacionarse durante operaciones de construcción.",
+      "instancias": ["C1", "C2", "C3"],
+      "propiedades_comunes": [
+        "Permite estacionar unidades",
+        "Lugar donde se realiza la construcción",
+        "Las unidades llegan aquí desde C0"
+      ],
+      "tipo_pddl": "predicado sobre locacion"
+    },
+    {
+      "id": "C13",
+      "nombre": "Base",
+      "categoria": "Tipo Especial de Locación",
+      "descripcion": "Punto de origen y destino final de todas las operaciones. Donde se concentran recursos inicialmente.",
+      "instancias": ["C0"],
+      "propiedades_comunes": [
+        "Todos los recursos y personal comienzan aquí",
+        "Todas las víctimas deben terminar aquí",
+        "Todo el personal de construcción debe regresar aquí"
+      ],
+      "tipo_pddl": "predicado sobre locacion"
+    },
+    {
+      "id": "C14",
+      "nombre": "ZonaDesastre",
+      "categoria": "Tipo Especial de Locación",
+      "descripcion": "Lugar del incendio donde se encuentran las víctimas que necesitan rescate.",
+      "instancias": ["M"],
+      "propiedades_comunes": [
+        "Ubicación inicial de todas las víctimas",
+        "Destino del personal de rescate",
+        "Lugar donde se realiza estabilización de víctimas"
+      ],
+      "tipo_pddl": "predicado sobre locacion"
+    },
+    {
+      "id": "C15",
+      "nombre": "Tarea",
+      "categoria": "Concepto Abstracto",
+      "descripcion": "Objetivo de construcción que debe completarse antes de poder avanzar a la siguiente locación.",
+      "instancias": ["Tarea_Puente_C1", "Tarea_Carretera_C2", "Tarea_Puente_C3"],
+      "propiedades_comunes": [
+        "Tiene estado (pendiente/completada)",
+        "Bloquea avance a siguiente locación hasta completarse",
+        "Requiere recursos específicos"
+      ],
+      "relacion_con_infraestructura": "Una tarea completada implica infraestructura operativa",
+      "tipo_pddl": "predicado tarea_completada"
+    }
+  ],
+  "resumen_cuantitativo": {
+    "total_conceptos": 15,
+    "conceptos_por_categoria": {
+      "Entidades_Espaciales": 4,
+      "Agentes_Humanos": 4,
+      "Recursos_Fisicos": 3,
+      "Atributos": 3,
+      "Conceptos_Abstractos": 1
+    },
+    "instancias_totales": {
+      "Locaciones": 5,
+      "Unidades_Moviles": 6,
+      "Personal_Rescate": 4,
+      "Personal_Construccion": 21,
+      "Conductores": 6,
+      "Victimas": 10,
+      "Infraestructura": 3,
+      "Maquinaria": 4
+    }
+  }
+}

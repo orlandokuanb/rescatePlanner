@@ -1,0 +1,289 @@
+// =============================================================================
+// RED SEMÁNTICA - DOMINIO DE RESCATE EN MINA
+// Curso: MIA-103 Fundamentos de Inteligencia Artificial
+// Herramienta: Graphviz DOT
+// Compilar: dot -Tpng red_semantica.dot -o red_semantica.png
+// =============================================================================
+
+digraph RedSemanticaRescate {
+    // Configuración general
+    rankdir=TB;  // Top to Bottom
+    splines=ortho;  // Líneas ortogonales
+    nodesep=0.8;
+    ranksep=1.2;
+    fontname="Arial";
+    fontsize=10;
+    
+    // Estilos de nodos por categoría
+    node [shape=box, style="rounded,filled", fontname="Arial", fontsize=9];
+    
+    // ==========================================================================
+    // DEFINICIÓN DE NODOS POR CATEGORÍA
+    // ==========================================================================
+    
+    // --- LOCACIONES (Color azul claro) ---
+    subgraph cluster_locaciones {
+        label="LOCACIONES";
+        style=dashed;
+        color=blue;
+        fontsize=11;
+        fontname="Arial Bold";
+        
+        C0 [fillcolor="#ADD8E6", label="C0\n(Base)"];
+        C1 [fillcolor="#ADD8E6", label="C1\n(Estacionamiento)"];
+        C2 [fillcolor="#ADD8E6", label="C2\n(Estacionamiento)"];
+        C3 [fillcolor="#ADD8E6", label="C3\n(Estacionamiento)"];
+        M [fillcolor="#FFE4E1", label="M\n(Mina/Desastre)"];
+    }
+    
+    // --- UNIDADES MÓVILES (Color verde claro) ---
+    subgraph cluster_unidades {
+        label="UNIDADES MÓVILES";
+        style=dashed;
+        color=green;
+        fontsize=11;
+        fontname="Arial Bold";
+        
+        UM1 [fillcolor="#90EE90", label="UM1\nCap: 8"];
+        UM2 [fillcolor="#90EE90", label="UM2\nCap: 8"];
+        U1 [fillcolor="#98FB98", label="U1\nPuente+3"];
+        UP [fillcolor="#90EE90", label="UP\nCap: 15"];
+        UX [fillcolor="#98FB98", label="UX\nCarga"];
+        U3 [fillcolor="#90EE90", label="U3\nCap: 10"];
+    }
+    
+    // --- PERSONAL DE RESCATE (Color naranja) ---
+    subgraph cluster_rescate {
+        label="PERSONAL DE RESCATE";
+        style=dashed;
+        color=orange;
+        fontsize=11;
+        fontname="Arial Bold";
+        
+        Medico [fillcolor="#FFA07A", label="Médico1\nEstabiliza: 4"];
+        Rescatista1 [fillcolor="#FFA07A", label="Rescatista1\nTraslada: 5"];
+        Rescatista2 [fillcolor="#FFA07A", label="Rescatista2\nTraslada: 5"];
+        Asistente [fillcolor="#FFA07A", label="Asistente1\nSuministros"];
+    }
+    
+    // --- VÍCTIMAS (Colores según severidad) ---
+    subgraph cluster_victimas {
+        label="VÍCTIMAS";
+        style=dashed;
+        color=red;
+        fontsize=11;
+        fontname="Arial Bold";
+        
+        // Víctimas graves (rojo)
+        VG1 [fillcolor="#FF6B6B", label="VG1\nGRAVE"];
+        VG2 [fillcolor="#FF6B6B", label="VG2\nGRAVE"];
+        VG3 [fillcolor="#FF6B6B", label="VG3\nGRAVE"];
+        VG4 [fillcolor="#FF6B6B", label="VG4\nGRAVE"];
+        
+        // Víctimas estables (amarillo)
+        VE1 [fillcolor="#FFD93D", label="VE1\nESTABLE"];
+        VE2 [fillcolor="#FFD93D", label="VE2\nESTABLE"];
+        VE3 [fillcolor="#FFD93D", label="VE3\nESTABLE"];
+        
+        // Víctimas no afectadas (gris claro)
+        VNA1 [fillcolor="#D3D3D3", label="VNA1\nNo Afectado"];
+        VNA2 [fillcolor="#D3D3D3", label="VNA2\nNo Afectado"];
+        VNA3 [fillcolor="#D3D3D3", label="VNA3\nNo Afectado"];
+    }
+    
+    // --- INFRAESTRUCTURA (Color café/marrón) ---
+    subgraph cluster_infraestructura {
+        label="INFRAESTRUCTURA";
+        style=dashed;
+        color=brown;
+        fontsize=11;
+        fontname="Arial Bold";
+        
+        PPF [fillcolor="#D2691E", label="PPF\nPuente C1", shape=box];
+        Carretera [fillcolor="#D2691E", label="Carretera\nC2 (500m)", shape=box];
+        PCP [fillcolor="#CD853F", label="PCP\nPuente Colgante C3", shape=box];
+    }
+    
+    // --- PERSONAL DE CONSTRUCCIÓN (Color púrpura claro) ---
+    subgraph cluster_construccion {
+        label="PERSONAL DE CONSTRUCCIÓN";
+        style=dashed;
+        color=purple;
+        fontsize=11;
+        fontname="Arial Bold";
+        
+        Tecnicos_C1 [fillcolor="#DDA0DD", label="Técnicos C1\n(3)", shape=ellipse];
+        Tecnicos_C3 [fillcolor="#DDA0DD", label="Técnicos C3\n(3)", shape=ellipse];
+        Obreros [fillcolor="#DDA0DD", label="Obreros\n(10)", shape=ellipse];
+        Ingeniero [fillcolor="#BA55D3", label="Ingeniero1", shape=ellipse];
+        Operador [fillcolor="#9370DB", label="Operador1\n(Se queda)", shape=ellipse];
+    }
+    
+    // --- RECURSOS (Color gris) ---
+    Maquinaria [fillcolor="#C0C0C0", label="Maquinaria\n(4 unidades)", shape=diamond];
+    Suministros [fillcolor="#C0C0C0", label="Alimentos\nAbrigo", shape=diamond];
+    
+    // ==========================================================================
+    // RELACIONES ESPACIALES (LOCACIONES)
+    // ==========================================================================
+    
+    // Conectividad de ruta
+    C0 -> C1 [label="adyacente", color=blue, penwidth=2];
+    C1 -> C2 [label="adyacente", color=blue, penwidth=2];
+    C2 -> C3 [label="adyacente", color=blue, penwidth=2];
+    C3 -> M [label="adyacente", color=blue, penwidth=2];
+    
+    // Infraestructura conecta locaciones
+    PPF -> C1 [label="en", color=brown, style=dashed];
+    PPF -> C2 [label="conecta_a", color=brown, penwidth=1.5];
+    
+    Carretera -> C2 [label="en", color=brown, style=dashed];
+    Carretera -> C3 [label="permite_acceso", color=brown, penwidth=1.5];
+    
+    PCP -> C3 [label="en", color=brown, style=dashed];
+    PCP -> M [label="conecta_a", color=brown, penwidth=1.5];
+    
+    // ==========================================================================
+    // RELACIONES DE UBICACIÓN INICIAL
+    // ==========================================================================
+    
+    // Unidades en C0
+    UM1 -> C0 [label="en", color=green, style=dotted];
+    UM2 -> C0 [label="en", color=green, style=dotted];
+    U1 -> C0 [label="en", color=green, style=dotted];
+    UP -> C0 [label="en", color=green, style=dotted];
+    UX -> C0 [label="en", color=green, style=dotted];
+    U3 -> C0 [label="en", color=green, style=dotted];
+    
+    // Personal de rescate en C0
+    Medico -> C0 [label="en", color=orange, style=dotted];
+    Rescatista1 -> C0 [label="en", color=orange, style=dotted];
+    Rescatista2 -> C0 [label="en", color=orange, style=dotted];
+    Asistente -> C0 [label="en", color=orange, style=dotted];
+    
+    // Personal de construcción en C0
+    Tecnicos_C1 -> C0 [label="en", color=purple, style=dotted];
+    Tecnicos_C3 -> C0 [label="en", color=purple, style=dotted];
+    Obreros -> C0 [label="en", color=purple, style=dotted];
+    Ingeniero -> C0 [label="en", color=purple, style=dotted];
+    Operador -> C0 [label="en", color=purple, style=dotted];
+    
+    // Víctimas en M
+    VG1 -> M [label="en", color=red, style=dotted];
+    VG2 -> M [label="en", color=red, style=dotted];
+    VG3 -> M [label="en", color=red, style=dotted];
+    VG4 -> M [label="en", color=red, style=dotted];
+    VE1 -> M [label="en", color="#FFD93D", style=dotted];
+    VE2 -> M [label="en", color="#FFD93D", style=dotted];
+    VE3 -> M [label="en", color="#FFD93D", style=dotted];
+    VNA1 -> M [label="en", color=gray, style=dotted];
+    VNA2 -> M [label="en", color=gray, style=dotted];
+    VNA3 -> M [label="en", color=gray, style=dotted];
+    
+    // ==========================================================================
+    // RELACIONES DE CAPACIDAD Y FUNCIÓN
+    // ==========================================================================
+    
+    // Unidades pueden transportar
+    UM1 -> Rescatista1 [label="puede\ntransportar", color=green, style=dashed, arrowhead=open];
+    UM2 -> VG1 [label="puede\ntransportar", color=green, style=dashed, arrowhead=open];
+    U1 -> PPF [label="transporta", color=green, penwidth=1.5];
+    U1 -> Tecnicos_C1 [label="transporta", color=green, penwidth=1.5];
+    UP -> Obreros [label="transporta", color=green, penwidth=1.5];
+    UP -> Ingeniero [label="transporta", color=green, penwidth=1.5];
+    UP -> Maquinaria [label="transporta", color=green, penwidth=1.5];
+    UX -> PCP [label="transporta", color=green, penwidth=1.5];
+    U3 -> Tecnicos_C3 [label="transporta", color=green, penwidth=1.5];
+    
+    // ==========================================================================
+    // RELACIONES DE ACCIÓN
+    // ==========================================================================
+    
+    // Médico estabiliza víctimas graves
+    Medico -> VG1 [label="estabiliza", color=red, penwidth=2];
+    Medico -> VG2 [label="estabiliza", color=red, penwidth=2];
+    Medico -> VG3 [label="estabiliza", color=red, penwidth=2];
+    Medico -> VG4 [label="estabiliza", color=red, penwidth=2];
+    
+    // Rescatistas trasladan víctimas
+    Rescatista1 -> VE1 [label="traslada", color=orange, arrowhead=open];
+    Rescatista2 -> VNA1 [label="traslada", color=orange, arrowhead=open];
+    
+    // Asistente proporciona suministros
+    Asistente -> Suministros [label="proporciona", color=orange];
+    Suministros -> VG1 [label="para", color=gray, style=dashed];
+    
+    // ==========================================================================
+    // RELACIONES DE CONSTRUCCIÓN
+    // ==========================================================================
+    
+    // Personal construye infraestructura
+    Tecnicos_C1 -> PPF [label="construye", color=purple, penwidth=2];
+    Obreros -> Carretera [label="construye", color=purple, penwidth=2];
+    Ingeniero -> Carretera [label="supervisa", color=purple, penwidth=1.5];
+    Maquinaria -> Carretera [label="requiere", color=gray];
+    Tecnicos_C3 -> PCP [label="instala", color=purple, penwidth=2];
+    Operador -> PCP [label="mantiene", color=purple, penwidth=2];
+    
+    // ==========================================================================
+    // RESTRICCIONES Y DEPENDENCIAS
+    // ==========================================================================
+    
+    // Secuencia de infraestructura
+    edge [color=black, style=bold, penwidth=2];
+    PPF -> Carretera [label="DEBE ESTAR\nOPERATIVO", constraint=true];
+    Carretera -> PCP [label="DEBE ESTAR\nOPERATIVO", constraint=true];
+    
+    // Prioridad de víctimas
+    edge [color=red, style=bold, penwidth=2];
+    VG1 -> VE1 [label="PRIORIDAD", constraint=false];
+    VG4 -> VNA1 [label="PRIORIDAD", constraint=false];
+    
+    // ==========================================================================
+    // LEYENDA
+    // ==========================================================================
+    
+    subgraph cluster_leyenda {
+        label="LEYENDA";
+        style=solid;
+        color=black;
+        fontsize=12;
+        fontname="Arial Bold";
+        
+        // Nodos de leyenda
+        node [shape=plaintext, fillcolor=white];
+        
+        ley1 [label=<
+            <table border="0" cellspacing="2">
+            <tr><td bgcolor="#ADD8E6">Locaciones</td></tr>
+            <tr><td bgcolor="#90EE90">Unidades Móviles</td></tr>
+            <tr><td bgcolor="#FFA07A">Personal Rescate</td></tr>
+            <tr><td bgcolor="#FF6B6B">Víctimas Graves</td></tr>
+            <tr><td bgcolor="#FFD93D">Víctimas Estables</td></tr>
+            <tr><td bgcolor="#D2691E">Infraestructura</td></tr>
+            <tr><td bgcolor="#DDA0DD">Personal Construcción</td></tr>
+            </table>
+        >];
+        
+        ley2 [label=<
+            <table border="0" cellspacing="2">
+            <tr><td>━━━━ adyacente</td></tr>
+            <tr><td>┄┄┄┄ en (ubicación)</td></tr>
+            <tr><td>━━━━ transporta</td></tr>
+            <tr><td>━━━━ construye</td></tr>
+            <tr><td><b>━━━━ PRIORIDAD</b></td></tr>
+            <tr><td><b>━━━━ DEPENDENCIA</b></td></tr>
+            </table>
+        >];
+    }
+    
+    // Notas importantes
+    Nota1 [shape=note, fillcolor=yellow, label="OBJETIVO:\nTodas las víctimas\nen C0\nGraves estabilizadas"];
+    Nota2 [shape=note, fillcolor=lightblue, label="RESTRICCIÓN:\nC0→C1→C2→C3→M\nSecuencial"];
+    Nota3 [shape=note, fillcolor=pink, label="CRÍTICO:\nPrioridad\nvíctimas graves"];
+    
+    // Posicionar notas
+    {rank=same; M; Nota1;}
+    {rank=same; C0; Nota2;}
+    {rank=same; VG4; Nota3;}
+}
